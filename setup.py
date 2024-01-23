@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="pystrainfilter",
-    version="0.2.1",
+    version="0.1",
     entry_points={
         "console_scripts": [
             "pystrainfilter=pystrainfilter.pystrainfilter:main",
