@@ -57,17 +57,37 @@ $ vi sf.sh
 . ${HOME}/miniconda3/etc/profile.d/conda.sh
 conda activate py310-strainfilter
 
-sdf='lig0_vinaout.sdf'
+coord='lig0_vinaout.sdf'
 emaxtotalstrain=6.5
 emaxtorsion=3.0
 # Edit scriptpath to your StrainFIlter installed dirctory
 scriptpath=${HOME}/data/scripts/ChemInfTools/apps/strainfilter
 
-pystrainfilter -s ${sdf} --emax-total-strain ${emaxtotalstrain} \
+pystrainfilter -c ${coord} --emax-total-strain ${emaxtotalstrain} \
     --emax-torsion ${emaxtorsion} --scriptpath ${scriptpath}
 ```
 
 ### run test job
 ```
 $ bash ./sf.sh
+```
+
+## Run job with multiple input files
+```
+#!/bin/bash                                                                                                                                                                     
+
+. ${HOME}/miniconda3/etc/profile.d/conda.sh
+conda activate py310-strainfilter
+
+inext='.pdbqt'
+emaxtotalstrain=6.5
+emaxtorsion=3.0
+# Edit scriptpath to your StrainFIlter installed dirctory                                                                                                                       
+scriptpath=${HOME}/data/scripts/ChemInfTools/apps/strainfilter
+
+for coord in *${inext}; do
+    echo ${coord}
+    pystrainfilter -c ${coord} --emax-total-strain ${emaxtotalstrain} \
+        --emax-torsion ${emaxtorsion} --scriptpath ${scriptpath}
+done
 ```
