@@ -4,14 +4,21 @@ python interface of StrainFilter
 ## Licence
 MIT
 
-## Install
+## Install using conda yaml environment file
 ```
-$ conda create -n py310-strainfilter -c conda-forge
+$ git clone https://github.com/mkatouda/pystrainfilter.git
+$ cd pystrainfilter
+$ conda create -f py310-strainfilter.
+$ conda activate py310-strainfilter
+$ git clone https://github.com/docking-org/ChemInfTools.git
+```
+
+## Install from conda package
+```
+$ conda create -n py310-strainfilter -c conda-forge python=3.10
 $ conda activate py310-strainfilter
 $ conda install -c conda-forge rdkit openbabel
-
 $ git clone https://github.com/docking-org/ChemInfTools.git
-
 $ git clone https://github.com/mkatouda/pystrainfilter.git
 $ cd pystrainfilter
 $ pip install .
