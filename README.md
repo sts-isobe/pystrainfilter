@@ -69,11 +69,12 @@ pystrainfilter -c ${coord} --emax-total-strain ${emaxtotalstrain} \
 
 ### run test job
 ```
-$ bash ./sf.sh
+$ bash ./sf_batch.sh
 ```
 
 ## Run job with multiple input files
 ```
+$ vi bash
 #!/bin/bash                                                                                                                                                                     
 
 . ${HOME}/miniconda3/etc/profile.d/conda.sh
@@ -90,4 +91,6 @@ for coord in *${inext}; do
     pystrainfilter -c ${coord} --emax-total-strain ${emaxtotalstrain} \
         --emax-torsion ${emaxtorsion} --scriptpath ${scriptpath}
 done
+
+$ bash ./sf_batch.sh
 ```
