@@ -15,7 +15,8 @@ def get_parser():
         pass
 
     parser = argparse.ArgumentParser(
-        description="StrainFilter system call interface"
+        description="StrainFilter system call interface",
+        formatter_class=customHelpFormatter
     )
     #parser.add_argument(
     #    "-i","--input",
