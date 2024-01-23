@@ -6,9 +6,9 @@ MIT
 
 ## Install
 ```
-$ conda create –n py310-strainfilter –c conda-forge
+$ conda create -n py310-strainfilter -c conda-forge
 $ conda activate py310-strainfilter
-$ conda install –c conda-forge rdkit openbabel
+$ conda install -c conda-forge rdkit openbabel
 
 $ git clone https://github.com/docking-org/ChemInfTools.git
 
@@ -44,10 +44,10 @@ options:
 ### Edit bash script(sf.sh): replace scriptpath value to pato to your StrainFilter installed directory
 ```
 $ cd /path/to/pystrainfilter
-$ cp –rp sample test && cd test
+$ cp -rp sample test && cd test
 $ ls
 lig0_vinaout.sdf  sf.sh
-$vi sf.sh
+$ vi sf.sh
 #!/bin/bash
 
 . ${HOME}/miniconda3/etc/profile.d/conda.sh
@@ -66,5 +66,4 @@ pystrainfilter -s ${sdf} --emax-total-strain ${emaxtotalstrain} \
 ### run test job
 ```
 $ bash ./sf.sh
-
 ```
