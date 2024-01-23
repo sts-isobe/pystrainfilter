@@ -8,7 +8,7 @@ MIT
 ```
 $ git clone https://github.com/mkatouda/pystrainfilter.git
 $ cd pystrainfilter
-$ conda create -f py310-strainfilter.
+$ conda create -f py310-strainfilter
 $ conda activate py310-strainfilter
 $ git clone https://github.com/docking-org/ChemInfTools.git
 ```
@@ -27,24 +27,21 @@ $ pip install .
 ## Command line usage help
 ```
 $ pystrainfilter -h
-sage: pystrainfilter [-h] [-i INPUT] [-s SDF_PATH] [--emax-total-strain EMAX_TOTAL_STRAIN] [--emax-torsion EMAX_TORSION] [--scriptpath SCRIPT_PATH] [-v]
+usage: pystrainfilter [-h] [-c COORD_PATH] [--emax-total-strain EMAX_TOTAL_STRAIN] [--emax-torsion EMAX_TORSION] [--scriptpath SCRIPT_PATH] [-v]
 
 StrainFilter system call interface
 
 options:
   -h, --help            show this help message and exit
-  -i INPUT, --input INPUT
-                        yaml style input file
-  -s SDF_PATH, --sdf SDF_PATH
-                        input sdf file
+  -c COORD_PATH, --coord COORD_PATH
+                        input coordinate file: file format can be treated with openbabel (default: input.sdf)
   --emax-total-strain EMAX_TOTAL_STRAIN
-                        maximum total strain energy
+                        maximum total strain energy (default: 6.5)
   --emax-torsion EMAX_TORSION
-                        maximum dihedral torsion strain energy
+                        maximum dihedral torsion strain energy (default: 1.8)
   --scriptpath SCRIPT_PATH
-                        install path of StrainFilter
-  -v, --verbose         Verbose option
-
+                        install path of StrainFilter (default: ./)
+  -v, --verbose         Verbose option (default: False)
 ```
 
 ## Run sample job
