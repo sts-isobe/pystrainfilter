@@ -8,9 +8,9 @@ dependencies:
   - brotli=1.1.0=hd590300_1
   - brotli-bin=1.1.0=hd590300_1
   - bzip2=1.0.8=hd590300_5
-  - ca-certificates=2023.11.17=hbcca054_0
+  - ca-certificates=2024.2.2=hbcca054_0
   - cairo=1.18.0=h3faef2a_0
-  - certifi=2023.11.17=pyhd8ed1ab_0
+  - certifi=2024.2.2=pyhd8ed1ab_0
   - chardet=5.2.0=py310hff52083_1
   - contourpy=1.2.0=py310hd41b1e2_0
   - cycler=0.12.1=pyhd8ed1ab_0
@@ -68,7 +68,7 @@ dependencies:
   - numpy=1.26.3=py310hb13e2d6_0
   - openbabel=3.1.1=py310hbff9852_9
   - openjpeg=2.5.0=h488ebb8_3
-  - openssl=3.2.0=hd590300_1
+  - openssl=3.2.1=hd590300_0
   - packaging=23.2=pyhd8ed1ab_0
   - pandas=2.2.0=py310hcc13569_0
   - pcre2=10.42=hcad00b1_0
@@ -83,6 +83,7 @@ dependencies:
   - python-tzdata=2023.4=pyhd8ed1ab_0
   - python_abi=3.10=4_cp310
   - pytz=2023.3.post1=pyhd8ed1ab_0
+  - pyyaml=6.0.1=py310h2372a71_1
   - rdkit=2023.09.4=py310hb79e901_0
   - readline=8.2=h8228510_1
   - reportlab=4.0.9=py310h2372a71_0
@@ -108,6 +109,7 @@ dependencies:
   - xorg-xextproto=7.3.0=h0b41bf4_1003
   - xorg-xproto=7.0.31=h7f98852_1007
   - xz=5.2.6=h166bdaf_0
+  - yaml=0.2.5=h7f98852_2
   - zlib=1.2.13=hd590300_5
   - zstd=1.5.5=hfc55251_0
   - pip:
