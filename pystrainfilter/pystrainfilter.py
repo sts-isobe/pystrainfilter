@@ -168,7 +168,7 @@ def run_strainfilter_batch(conf):
     if os.path.isdir(coord):
         for ext in ['.sdf', '.pdbqt', '.mol2', '.mol']:
             coord_dir_path ='{}/*{}'.format(coord, ext)
-            coord_files = glob.glob(coord_dir_path)
+            coord_files = [cf for cf in sorted(glob.glob(coord_dir_path))]
             if len(coord_files) > 0: 
                 break
     else:
