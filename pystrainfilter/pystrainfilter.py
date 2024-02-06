@@ -44,7 +44,7 @@ def get_parser():
         help="maximum total strain energy",
         type=float,
         dest='emax_total_strain',
-        default=6.5
+        default=6.0
     )
     parser.add_argument(
         "--emax-torsion",
@@ -68,10 +68,10 @@ def get_parser():
     )
     parser.add_argument(
         "-o","--out",
-        help="output csv file",
+        help="basename of output csv file",
         type=str,
         dest='out',
-        default='strain_filtered.csv'
+        default='strain_score'
     )
     parser.add_argument(
         "-v","--verbose",
@@ -147,13 +147,16 @@ def run_strainfilter(coord_path, script_path, emax_total_strain=6.5,
         name = [os.path.basename(coord_path) for i in range(len(df))]
         score = df.to_numpy()
     except:
-        name = []
-        score = np.empty([0, 2])
+        name = [os.path.basename(coord_path)]
+        score = np.zeros([1, 2])
+        score[:, :] = np.nan
         pass
 
     if not savescr:
         for file_path in [mol2_path, csv_path]:
             if os.path.exists(file_path): os.remove(file_path)
+
+    print('name:', name, 'score:', score)
 
     return name, score
 
@@ -184,7 +187,7 @@ def run_strainfilter_batch(conf):
         na, sc = run_strainfilter(coord_path, **conf)
         name += na
         score = np.concatenate([score, sc])
-        sid += [i + 1 for i in range(len(sc))] 
+        sid += [i + 1 for i in range(sc.shape[0])] 
 
     df = pd.DataFrame(
         {
@@ -192,13 +195,13 @@ def run_strainfilter_batch(conf):
             scname[0]: score[:, 0], scname[1]: score[:, 1]
         }
     )
-    csvout_path = 'torsion_strain.csv'
+    csvout_path = conf['out'] + '_raw.csv'
     df.to_csv(csvout_path, index=False)
 
     df_filtered = df[
         (df[scname[0]] <= emax_total_strain) & (df[scname[1]] <= emax_torsion)
     ]
-    csvout_path = conf['out']
+    csvout_path = conf['out'] + '_filtered.csv'
     df_filtered.to_csv(csvout_path, index=False)
 
 
