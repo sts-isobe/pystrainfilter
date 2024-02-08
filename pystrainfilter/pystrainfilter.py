@@ -5,7 +5,7 @@ import glob
 import argparse
 import subprocess
 
-#from openbabel import pybel
+from openbabel import pybel
 from rdkit import Chem
 import numpy as np
 import pandas as pd
@@ -18,6 +18,7 @@ except:
 scname = ['total_strain', 'dihedral_torsion_strain']
 
 def get_parser():
+
     class customHelpFormatter(argparse.ArgumentDefaultsHelpFormatter,
                               argparse.RawTextHelpFormatter):
         pass
@@ -61,17 +62,29 @@ def get_parser():
         default='./ChemInfTools/apps/strainfilter'
     )
     parser.add_argument(
-        "-s","--savescr",
-        help="save scracth files option",
-        action='store_true',
-        dest='savescr'
-    )
-    parser.add_argument(
         "-o","--out",
         help="basename of output csv file",
         type=str,
         dest='out',
-        default='strain_score'
+        default='strain'
+    )
+    parser.add_argument(
+        "-s","--savesdf",
+        help="save sdf file of filtered structures",
+        action='store_true',
+        dest='savesdf'
+    )
+    parser.add_argument(
+        "--addH",
+        help="add hydrogen atoms to filtered structures in sdf file",
+        action='store_true',
+        dest='addH'
+    )
+    parser.add_argument(
+        "--savescr",
+        help="save scracth files option",
+        action='store_true',
+        dest='savescr'
     )
     parser.add_argument(
         "-v","--verbose",
@@ -83,6 +96,7 @@ def get_parser():
 
 
 def set_config(args):
+
     # Read config yaml file
     if args.inp is not None and os.path.isfile(args.inp):
         with open(args.inp, 'r') as f:
@@ -156,9 +170,41 @@ def run_strainfilter(coord_path, script_path, emax_total_strain=6.5,
         for file_path in [mol2_path, csv_path]:
             if os.path.exists(file_path): os.remove(file_path)
 
-    print('name:', name, 'score:', score)
+    if verbose: print('name:', name, 'score:', score, flush=True)
 
     return name, score
+
+
+def sdf_write(df, coord_dir_path='.', inext='.sdf', out='strain', addH=False,
+              verbose=False, **kwargs):
+
+    if verbose: print('Write structures to a sdf file.', flush=True)
+
+    sdfout_path = out + '_geom_filtered.sdf'
+    with pybel.Outputfile('sdf', sdfout_path, overwrite=True) as out1:
+
+        filenames = df['filename'].unique().tolist()
+        #for idx, item in df.iterrows():
+        for filename in filenames:
+            infilename = '{}/{}'.format(coord_dir_path, filename)
+            if verbose: print('infilename:', infilename, flush=True)
+            mols = list(pybel.readfile(inext[1:], infilename))
+            #m = next(pybel.readfile(inext[1:], infilename))
+            df_s = df.query('filename == "{}"'.format(filename))
+            for idx, item in df_s.iterrows():
+                if verbose: print(idx, '\n', item, flush=True)
+                m = mols[item['SID']]
+                if addH:
+                    with pybel.Outputfile('pdb', 'tmp.pdb', overwrite=True) as out2:
+                        out2.write(m)
+                        m = next(pybel.readfile('pdb', 'tmp.pdb'))
+                        m.OBMol.AddHydrogens()
+                        os.remove('tmp.pdb')
+                m.data['input_file_name'] = item['filename']
+                m.data['structure_ID'] = item['SID']
+                for scn in scname:
+                    m.data[scn] = item[scn]
+                out1.write(m)
 
 
 def run_strainfilter_batch(conf):
@@ -166,20 +212,28 @@ def run_strainfilter_batch(conf):
     coord = conf['coord']
     emax_total_strain = conf['emax_total_strain']
     emax_torsion = conf['emax_torsion']
+    savesdf = conf['savesdf']
+    addH = conf['addH']
     verbose = conf['verbose']
 
     if os.path.isdir(coord):
+        coord_dir_path = coord
         for ext in ['.sdf', '.pdbqt', '.mol2', '.mol']:
-            coord_dir_path ='{}/*{}'.format(coord, ext)
-            coord_files = [cf for cf in sorted(glob.glob(coord_dir_path))]
-            if len(coord_files) > 0: 
+            coord_files ='{}/*{}'.format(coord, ext)
+            coord_files = [cf for cf in sorted(glob.glob(coord_files))]
+            if len(coord_files) > 0:
+                inext = ext
                 break
     else:
+        coord_dir_path = os.path.dirname(coord)
+        if len(coord_dir_path) == 0: coord_dir_path = '.'
         coord_files = [coord]
+        inext = os.path.splitext(os.path.basename(coord))[1]
     ncrdfile = len(coord_files)
 
     if verbose:
         print('coordinate files:\n', coord_files, flush=True)
+        print('coord_dir_path:', coord_dir_path, flush=True)
 
     name = []; sid = []; score = np.empty([0, 2])
     for idx, coord_path in enumerate(coord_files):
@@ -187,7 +241,7 @@ def run_strainfilter_batch(conf):
         na, sc = run_strainfilter(coord_path, **conf)
         name += na
         score = np.concatenate([score, sc])
-        sid += [i + 1 for i in range(sc.shape[0])] 
+        sid += [i for i in range(sc.shape[0])] 
 
     df = pd.DataFrame(
         {
@@ -195,14 +249,27 @@ def run_strainfilter_batch(conf):
             scname[0]: score[:, 0], scname[1]: score[:, 1]
         }
     )
-    csvout_path = conf['out'] + '_raw.csv'
+    csvout_path = conf['out'] + '_score_raw.csv'
     df.to_csv(csvout_path, index=False)
 
     df_filtered = df[
         (df[scname[0]] <= emax_total_strain) & (df[scname[1]] <= emax_torsion)
     ]
-    csvout_path = conf['out'] + '_filtered.csv'
+    csvout_path = conf['out'] + '_score_filtered.csv'
     df_filtered.to_csv(csvout_path, index=False)
+
+    if savesdf:
+        sdf_write(
+            df=df_filtered, coord_dir_path=coord_dir_path, inext=inext, **conf
+        )
+
+    nfilt = len(df_filtered); ntot = len(df)
+    ratio_filt = float(nfilt) / float(ntot)
+
+    print(
+        '\npystrainfilter finished!: #filtered/#input={}/{} ({:.3f})\n'\
+        .format(nfilt, ntot, ratio_filt), flush=True
+    )
 
 
 def main():

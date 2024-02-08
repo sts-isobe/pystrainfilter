@@ -10,5 +10,5 @@ emaxtorsion=3.0
 scriptpath=${HOME}/data/scripts/ChemInfTools/apps/strainfilter
 
 pystrainfilter -s ${sdf} --emax-total-strain ${emaxtotalstrain} \
-    --emax-torsion ${emaxtorsion} --scriptpath ${scriptpath}
+    --emax-torsion ${emaxtorsion} --scriptpath ${scriptpath} -s
     
