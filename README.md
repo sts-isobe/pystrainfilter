@@ -50,12 +50,16 @@ options:
 ```
 
 ## Run sample job with single sdf file
-### Edit bash script(sf.sh): replace scriptpath value to path to your StrainFilter installed directory
+### Copy sample job directory
 ```
 $ cd /path/to/pystrainfilter
 $ cp -rp sample/sdf testsdf && cd testsdf
 $ ls
 lig0_vinaout.sdf  sf.sh
+```
+
+### Edit bash script(sf.sh): replace scriptpath value to path to your StrainFilter installed directory
+```
 $ vi sf.sh
 #!/bin/bash
 
@@ -78,12 +82,16 @@ $ bash ./sf.sh
 ```
 
 ## Run sample job with multiple pdbqt input files
-### Edit bash script(sf.sh): replace scriptpath value to path to your StrainFilter installed directory
+### Copy sample job directory
 ```
 $ cd /path/to/pystrainfilter
 $ cp -rp sample/pdbqt testpdbqt && cd testpdbqt
 $ ls
 MCULE-1005714968.pdbqt	MCULE-1037768225.pdbqt	MCULE-1062803813.pdbqt	MCULE-1089858904.pdbqt	MCULE-1089955095.pdbqt	sf.sh
+```
+
+### Edit bash script(sf.sh): replace scriptpath value to path to your StrainFilter installed directory
+
 $ vi sf.sh
 #!/bin/bash
 
