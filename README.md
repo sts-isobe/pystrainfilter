@@ -92,6 +92,7 @@ MCULE-1005714968.pdbqt	MCULE-1037768225.pdbqt	MCULE-1062803813.pdbqt	MCULE-10898
 
 ### Edit bash script(sf.sh): replace scriptpath value to path to your StrainFilter installed directory
 
+```
 $ vi sf.sh
 #!/bin/bash
 
@@ -112,4 +113,43 @@ pystrainfilter -c ${coord} --emax-total-strain ${emaxtotalstrain} \
 ### Run sample job
 ```
 $ bash ./sf.sh
+```
+
+## Using yaml input file for sample job with single sdf input file
+### Copy sample job directory
+```
+$ cd /path/to/pystrainfilter
+$ cp -rp sample/sdf testsdf && cd testsdf
+$ ls
+lig0_vinaout.sdf  sf.sh
+```
+
+### Prepare yaml input file
+Note: yaml keyward is replaced '-' with '_' from command options.
+
+```
+$ vi input.yml
+coord : 'lig0_vinaout.sdf'
+emax_total_strain : 6.0
+emax_torsion : 1.8
+# Edit scriptpath to your StrainFIlter installed dirctory
+script_path : '~/data/scripts/ChemInfTools/apps/strainfilter'
+savesdf : True
+```
+
+### Make bash script(sf.sh): replace scriptpath value to path to your StrainFilter installed directory
+
+```
+$ vi sf_yml.sh
+#!/bin/bash
+
+. ${HOME}/miniconda3/etc/profile.d/conda.sh
+conda activate py310-strainfilter
+
+pystrainfilter -i input.yml
+```
+
+### Run sample job
+```
+$ bash ./sf_yml.sh
 ```
