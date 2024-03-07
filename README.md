@@ -1,10 +1,16 @@
 # pystrainfilter
-python interface of StrainFilter
+python interface of [StrainFilter](https://wiki.docking.org/index.php/Strain_Filtering)
 
-## Licence
-MIT
+## License
+pystrainfilter: MIT    
+StrainFilter: original academic license by the [Irwin](https://irwinlab.compbio.ucsf.edu/) and [Shoichet](https://bkslab.org/) Laboratories in the Department of Pharmaceutical Chemistry at the University of California, San Francisco (UCSF)
+
+## Before installation
+StrainFilter is distributed at [Tldr's a Ligand Discovery Resource](https://tldr.docking.org/). Before using StrainFilter, the user should (1) create Tldr account at [web site](https://tldr.docking.org/) with the agreement of the Tldr's license, and (2) activate the account after getting permission by the Irwin and Shoichet Laboratories.   
 
 ## Install using conda yaml environment file
+Notice: Using ChemInfTools without activating Tldr account is illegal! You should not forget activating Tldr account before installation.
+
 ```
 $ git clone https://github.com/mkatouda/pystrainfilter.git
 $ cd pystrainfilter
@@ -153,3 +159,6 @@ pystrainfilter -i input.yml
 ```
 $ bash ./sf_yml.sh
 ```
+
+### Contact
+Michio Katouda, Ph.D.　(e-mail: [katouda@rist.or.jp](<mailto:katouda@rist.or.jp>))
