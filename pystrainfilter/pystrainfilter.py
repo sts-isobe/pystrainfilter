@@ -154,7 +154,8 @@ def run_strainfilter(coord_path, script_path, emax_total_strain=6.5,
 
     csv_path = basename + '_Torsion_Strain.csv'
     try:
-        df = pd.read_csv(csv_path, header=None)[[1, 5]]
+        tmp_csv_path = add_header_to_csv(csv_path, basename)
+        df = pd.read_csv(tmp_csv_path, low_memory=False)[["1", "5"]]
         df.index.name = 'SID'
         df.columns = scname
         print('StrainFilter output csv_path:', csv_path, '\n', df, '\n', flush=True)
@@ -167,7 +168,7 @@ def run_strainfilter(coord_path, script_path, emax_total_strain=6.5,
         pass
 
     if not savescr:
-        for file_path in [mol2_path, csv_path]:
+        for file_path in [mol2_path, csv_path, tmp_csv_path]:
             if os.path.exists(file_path): os.remove(file_path)
 
     if verbose: print('name:', name, 'score:', score, flush=True)
@@ -205,6 +206,25 @@ def sdf_write(df, coord_dir_path='.', inext='.sdf', out='strain', addH=False,
                 for scn in scname:
                     m.data[scn] = item[scn]
                 out1.write(m)
+
+def add_header_to_csv(csv_name, basename):
+    max_len = 0
+    f_str = ''
+    with open(csv_name) as f:
+       for l in f.readlines():
+           f_str = str(f_str) + str(l)
+           tmp_len = len(l.split(','))
+           if tmp_len > max_len:
+               max_len = tmp_len
+    mod_str = ''
+    for i in range(0,max_len):
+        mod_str = mod_str + str(i) + ','
+    mod_str = mod_str[0:-1]
+    f_str = mod_str + '\n' + f_str
+    tmp_csv_name = basename + '_with_header_Torsion_Strain.csv'
+    with open(tmp_csv_name, 'w') as f:
+        f.write(f_str)
+    return tmp_csv_name
 
 
 def run_strainfilter_batch(conf):
